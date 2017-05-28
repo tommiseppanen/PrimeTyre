@@ -203,8 +203,8 @@ MonoBehaviour:
   Inertia: 3
   Rigid: {fileID: 1912178056}
   _suspensionTravel: 0.3
-  _spring: 20000
-  _damper: 4500
+  _spring: 18000
+  _damper: 2000
   _rollingResistance: 0.001
   ForwardFriction:
     _extremumSlip: 0.4
@@ -281,8 +281,8 @@ MonoBehaviour:
   Inertia: 3
   Rigid: {fileID: 1065148247}
   _suspensionTravel: 0.3
-  _spring: 20000
-  _damper: 4500
+  _spring: 18000
+  _damper: 2000
   _rollingResistance: 0.001
   ForwardFriction:
     _extremumSlip: 0.4
@@ -784,8 +784,8 @@ MonoBehaviour:
   Inertia: 3
   Rigid: {fileID: 1912178056}
   _suspensionTravel: 0.3
-  _spring: 20000
-  _damper: 4500
+  _spring: 18000
+  _damper: 2000
   _rollingResistance: 0.001
   ForwardFriction:
     _extremumSlip: 0.4
@@ -1121,7 +1121,12 @@ Prefab:
     - target: {fileID: 114748400674812038, guid: d3f0fd3335173ba4cbda97f63fb205ce,
         type: 2}
       propertyPath: _spring
-      value: 20000
+      value: 18000
+      objectReference: {fileID: 0}
+    - target: {fileID: 114748400674812038, guid: d3f0fd3335173ba4cbda97f63fb205ce,
+        type: 2}
+      propertyPath: _damper
+      value: 2000
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d3f0fd3335173ba4cbda97f63fb205ce, type: 2}
@@ -1491,7 +1496,12 @@ Prefab:
     - target: {fileID: 114748400674812038, guid: d3f0fd3335173ba4cbda97f63fb205ce,
         type: 2}
       propertyPath: _spring
-      value: 20000
+      value: 18000
+      objectReference: {fileID: 0}
+    - target: {fileID: 114748400674812038, guid: d3f0fd3335173ba4cbda97f63fb205ce,
+        type: 2}
+      propertyPath: _damper
+      value: 2000
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d3f0fd3335173ba4cbda97f63fb205ce, type: 2}
@@ -1657,8 +1667,8 @@ MonoBehaviour:
   Inertia: 3
   Rigid: {fileID: 1065148247}
   _suspensionTravel: 0.3
-  _spring: 20000
-  _damper: 4500
+  _spring: 18000
+  _damper: 2000
   _rollingResistance: 0.001
   ForwardFriction:
     _extremumSlip: 0.4
@@ -1742,7 +1752,12 @@ Prefab:
     - target: {fileID: 114748400674812038, guid: d3f0fd3335173ba4cbda97f63fb205ce,
         type: 2}
       propertyPath: _spring
-      value: 20000
+      value: 18000
+      objectReference: {fileID: 0}
+    - target: {fileID: 114748400674812038, guid: d3f0fd3335173ba4cbda97f63fb205ce,
+        type: 2}
+      propertyPath: _damper
+      value: 2000
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d3f0fd3335173ba4cbda97f63fb205ce, type: 2}
@@ -1887,7 +1902,12 @@ Prefab:
     - target: {fileID: 114748400674812038, guid: d3f0fd3335173ba4cbda97f63fb205ce,
         type: 2}
       propertyPath: _spring
-      value: 20000
+      value: 18000
+      objectReference: {fileID: 0}
+    - target: {fileID: 114748400674812038, guid: d3f0fd3335173ba4cbda97f63fb205ce,
+        type: 2}
+      propertyPath: _damper
+      value: 2000
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d3f0fd3335173ba4cbda97f63fb205ce, type: 2}

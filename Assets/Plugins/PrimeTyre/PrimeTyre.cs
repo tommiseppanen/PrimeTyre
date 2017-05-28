@@ -13,7 +13,13 @@ namespace Assets.Plugins.PrimeTyre
         private Rigidbody Rigid;
 
         [SerializeField]
-        private float _suspensionTravel = 0.5f;
+        private float _suspensionTravel = 0.3f;
+
+        [SerializeField]
+        private float _spring = 35000.0f;
+
+        [SerializeField]
+        private float _damper = 4500.0f;
 
         [SerializeField]
         private float _rollingResistance = 0.001f;
@@ -47,6 +53,8 @@ namespace Assets.Plugins.PrimeTyre
 
         private float _differentialSlipRatio;
         private Vector3 _position;
+        private float _previousSuspensionDistance;
+        private float _normalForce { get; set; }
 
         private const float RelaxationLenght = 0.0914f;
 
@@ -64,11 +72,13 @@ namespace Assets.Plugins.PrimeTyre
             rotation = Quaternion.identity;
         }
 
+        void Start()
+        {
+            _previousSuspensionDistance = _suspensionTravel;
+        }
+
         void FixedUpdate()
         {
-            //TODO: suspension
-            var normalForce = 250.0f *  9.81f;
-
             RaycastHit hit;
             IsGrounded = Physics.Raycast(new Ray(transform.position, -transform.up), out hit,
                 WheelRadius + _suspensionTravel);
@@ -79,7 +89,9 @@ namespace Assets.Plugins.PrimeTyre
             else
             {
                 _position = transform.position;
-            }    
+            }
+
+            UpdateSuspension();
 
             var longitudinalCarSpeed = Vector3.Dot(Rigid.velocity, Rigid.transform.forward);
             var longitudinalTyreSpeed = AngularSpeed * WheelRadius;
@@ -88,12 +100,26 @@ namespace Assets.Plugins.PrimeTyre
             slipdelta /= RelaxationLenght;
             _differentialSlipRatio += slipdelta * Time.fixedDeltaTime;
 
-            var tyreForce = Mathf.Sign(_differentialSlipRatio) * normalForce * ForwardFriction.CalculateCoefficient(_differentialSlipRatio);
-            Rigid.AddForce(transform.forward * tyreForce);
+            var tyreForce = Mathf.Sign(_differentialSlipRatio) * _normalForce * ForwardFriction.CalculateCoefficient(_differentialSlipRatio);
+            //TODO: substract rolling resistance
+            if (IsGrounded)
+                Rigid.AddForceAtPosition(transform.forward * tyreForce, _position);
 
-            var rollingResistanceForce = longitudinalTyreSpeed * _rollingResistance * normalForce;
+            var rollingResistanceForce = longitudinalTyreSpeed * _rollingResistance * _normalForce;
             var angularAcceleration = (MotorTorque - (rollingResistanceForce + tyreForce) * WheelRadius) / Inertia;
             AngularSpeed += angularAcceleration * Time.fixedDeltaTime;
+        }
+
+        void UpdateSuspension()
+        {
+            var distance = Vector3.Distance(transform.position-transform.up*_suspensionTravel, _position);
+            var springForce = _spring * distance;
+            var damperForce = _damper * ((distance - _previousSuspensionDistance) / Time.fixedDeltaTime);
+            _normalForce = springForce + damperForce;
+            if (IsGrounded)
+                Rigid.AddForceAtPosition(_normalForce * transform.up, transform.position);
+            Debug.Log(_spring * distance);
+            _previousSuspensionDistance = distance;
         }
     }
 }

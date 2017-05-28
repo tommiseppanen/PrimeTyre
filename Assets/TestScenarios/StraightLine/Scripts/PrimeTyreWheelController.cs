@@ -9,31 +9,11 @@ namespace Assets.TestScenarios.StraightLine.Scripts
         private PrimeTyre tyre;
 
         [SerializeField]
-        private bool driveWheel;
-
-        [SerializeField]
         private Transform visualWheel;
-
-        [SerializeField]
-        private float slipLimit;
-
-        private float torque = 200.0f;
 
         void Update()
         {
             UpdateVisualWheel();
-        }
-
-        void FixedUpdate()
-        {
-            if (!driveWheel)
-                return;
-
-            TyreHit hit;
-            tyre.GetGroundHit(out hit);
-            bool tractionControl;
-            torque = StraigtLineTestLogic.GetTorque(torque, hit.ForwardSlip, slipLimit, out tractionControl);
-            tyre.MotorTorque = tractionControl ? 0 : torque;
         }
 
         void UpdateVisualWheel()

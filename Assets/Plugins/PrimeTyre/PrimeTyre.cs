@@ -118,7 +118,6 @@ namespace Assets.Plugins.PrimeTyre
             _normalForce = springForce + damperForce;
             if (IsGrounded)
                 Rigid.AddForceAtPosition(_normalForce * transform.up, transform.position);
-            Debug.Log(_spring * distance);
             _previousSuspensionDistance = distance;
         }
     }

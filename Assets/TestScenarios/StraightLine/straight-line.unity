@@ -959,7 +959,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 34
+  m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!4 &1065148248
 Transform:
@@ -1127,6 +1127,11 @@ Prefab:
         type: 2}
       propertyPath: _damper
       value: 2000
+      objectReference: {fileID: 0}
+    - target: {fileID: 114748400674812038, guid: d3f0fd3335173ba4cbda97f63fb205ce,
+        type: 2}
+      propertyPath: Inertia
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d3f0fd3335173ba4cbda97f63fb205ce, type: 2}
@@ -1503,6 +1508,11 @@ Prefab:
       propertyPath: _damper
       value: 2000
       objectReference: {fileID: 0}
+    - target: {fileID: 114748400674812038, guid: d3f0fd3335173ba4cbda97f63fb205ce,
+        type: 2}
+      propertyPath: Inertia
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d3f0fd3335173ba4cbda97f63fb205ce, type: 2}
   m_IsPrefabParent: 0
@@ -1759,6 +1769,11 @@ Prefab:
       propertyPath: _damper
       value: 2000
       objectReference: {fileID: 0}
+    - target: {fileID: 114748400674812038, guid: d3f0fd3335173ba4cbda97f63fb205ce,
+        type: 2}
+      propertyPath: Inertia
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d3f0fd3335173ba4cbda97f63fb205ce, type: 2}
   m_IsPrefabParent: 0
@@ -1909,6 +1924,11 @@ Prefab:
       propertyPath: _damper
       value: 2000
       objectReference: {fileID: 0}
+    - target: {fileID: 114748400674812038, guid: d3f0fd3335173ba4cbda97f63fb205ce,
+        type: 2}
+      propertyPath: Inertia
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d3f0fd3335173ba4cbda97f63fb205ce, type: 2}
   m_IsPrefabParent: 0
@@ -1954,7 +1974,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 34
+  m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!114 &1912178057
 MonoBehaviour:

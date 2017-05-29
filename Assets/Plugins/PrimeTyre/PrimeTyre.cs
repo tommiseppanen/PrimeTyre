@@ -49,12 +49,13 @@ namespace Assets.Plugins.PrimeTyre
 
         public bool IsGrounded { get; private set; }
 
-        public float AngularSpeed { get; private set; }
+        private float _angularSpeed;
+        private float _angularPosition;
 
         private float _differentialSlipRatio;
         private Vector3 _position;
         private float _previousSuspensionDistance;
-        private float _normalForce { get; set; }
+        private float _normalForce;
 
         private const float RelaxationLenght = 0.0914f;
 
@@ -68,8 +69,9 @@ namespace Assets.Plugins.PrimeTyre
 
         public void GetWorldPose(out Vector3 position, out Quaternion rotation)
         {
+            var tyreRotation = Quaternion.Euler((_angularPosition * 180.0f) / Mathf.PI, 0, 0);
             position = _position;
-            rotation = Quaternion.identity;
+            rotation = Rigid.rotation * tyreRotation;
         }
 
         void Start()
@@ -80,21 +82,21 @@ namespace Assets.Plugins.PrimeTyre
         void FixedUpdate()
         {
             RaycastHit hit;
-            IsGrounded = Physics.Raycast(new Ray(transform.position, -transform.up), out hit,
+            IsGrounded = Physics.Raycast(new Ray(transform.position, -Rigid.transform.up), out hit,
                 WheelRadius + _suspensionTravel);
             if (IsGrounded)
             {
-                _position = hit.point+transform.up* WheelRadius;
+                _position = hit.point+Rigid.transform.up * WheelRadius;
             }
             else
             {
-                _position = transform.position;
+                _position = transform.position - Rigid.transform.up*_suspensionTravel;
             }
 
             UpdateSuspension();
 
             var longitudinalCarSpeed = Vector3.Dot(Rigid.velocity, Rigid.transform.forward);
-            var longitudinalTyreSpeed = AngularSpeed * WheelRadius;
+            var longitudinalTyreSpeed = _angularSpeed * WheelRadius;
             var slipdelta = (longitudinalTyreSpeed - longitudinalCarSpeed) -
                             Mathf.Abs(longitudinalCarSpeed) * _differentialSlipRatio;
             slipdelta /= RelaxationLenght;
@@ -107,17 +109,18 @@ namespace Assets.Plugins.PrimeTyre
 
             var rollingResistanceForce = longitudinalTyreSpeed * _rollingResistance * _normalForce;
             var angularAcceleration = (MotorTorque - (rollingResistanceForce + tyreForce) * WheelRadius) / Inertia;
-            AngularSpeed += angularAcceleration * Time.fixedDeltaTime;
+            _angularSpeed += angularAcceleration * Time.fixedDeltaTime;
+            _angularPosition = (_angularPosition + _angularSpeed * Time.fixedDeltaTime) % (2*Mathf.PI);
         }
 
         void UpdateSuspension()
         {
-            var distance = Vector3.Distance(transform.position-transform.up*_suspensionTravel, _position);
+            var distance = Vector3.Distance(transform.position-Rigid.transform.up*_suspensionTravel, _position);
             var springForce = _spring * distance;
             var damperForce = _damper * ((distance - _previousSuspensionDistance) / Time.fixedDeltaTime);
             _normalForce = springForce + damperForce;
             if (IsGrounded)
-                Rigid.AddForceAtPosition(_normalForce * transform.up, transform.position);
+                Rigid.AddForceAtPosition(_normalForce * Rigid.transform.up, _position);
             _previousSuspensionDistance = distance;
         }
     }

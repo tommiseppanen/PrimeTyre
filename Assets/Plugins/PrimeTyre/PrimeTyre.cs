@@ -50,7 +50,7 @@ namespace Assets.Plugins.PrimeTyre
         public bool IsGrounded { get; private set; }
 
         private float _angularSpeed;
-        private float _angularPosition;
+        private float _rotation;
 
         private float _differentialSlipRatio;
         private Vector3 _position;
@@ -59,19 +59,26 @@ namespace Assets.Plugins.PrimeTyre
 
         private const float RelaxationLenght = 0.0914f;
 
-        public bool GetGroundHit(out TyreHit hit)
+        void Start()
         {
-            hit = new TyreHit();
-            if (IsGrounded)
-                hit.ForwardSlip = _differentialSlipRatio;
-            return IsGrounded;
+            _previousSuspensionDistance = _suspensionTravel;
         }
 
-        public void GetWorldPose(out Vector3 position, out Quaternion rotation)
+        private void FixedUpdate()
         {
-            var tyreRotation = Quaternion.Euler((_angularPosition * 180.0f) / Mathf.PI, 0, 0);
-            position = GetTyrePosition();
-            rotation = Rigid.rotation * tyreRotation;
+            _position = GetTyrePosition();
+            UpdateSuspension();
+            _differentialSlipRatio += CalculateSlipDelta() * Time.fixedDeltaTime;
+
+            var tyreForce = Mathf.Sign(_differentialSlipRatio) * _normalForce * ForwardFriction.CalculateCoefficient(_differentialSlipRatio);
+            //TODO: substract rolling resistance
+            if (IsGrounded)
+                Rigid.AddForceAtPosition(transform.forward * tyreForce, _position);
+
+            var rollingResistanceForce = _angularSpeed * WheelRadius * _rollingResistance * _normalForce;
+            var angularAcceleration = (MotorTorque - (rollingResistanceForce + tyreForce) * WheelRadius) / Inertia;
+            _angularSpeed += angularAcceleration * Time.fixedDeltaTime;
+            _rotation = (_rotation + _angularSpeed * Time.fixedDeltaTime) % (2*Mathf.PI);
         }
 
         private Vector3 GetTyrePosition()
@@ -80,41 +87,11 @@ namespace Assets.Plugins.PrimeTyre
             IsGrounded = Physics.Raycast(new Ray(transform.position, -Rigid.transform.up), out hit,
                 WheelRadius + _suspensionTravel);
             if (IsGrounded)
-            {
                 return hit.point + Rigid.transform.up * WheelRadius;
-            }
             return transform.position - Rigid.transform.up * _suspensionTravel;
         }
 
-        void Start()
-        {
-            _previousSuspensionDistance = _suspensionTravel;
-        }
-
-        void FixedUpdate()
-        {
-            _position = GetTyrePosition();
-            UpdateSuspension();
-
-            var longitudinalCarSpeed = Vector3.Dot(Rigid.velocity, Rigid.transform.forward);
-            var longitudinalTyreSpeed = _angularSpeed * WheelRadius;
-            var slipdelta = (longitudinalTyreSpeed - longitudinalCarSpeed) -
-                            Mathf.Abs(longitudinalCarSpeed) * _differentialSlipRatio;
-            slipdelta /= RelaxationLenght;
-            _differentialSlipRatio += slipdelta * Time.fixedDeltaTime;
-
-            var tyreForce = Mathf.Sign(_differentialSlipRatio) * _normalForce * ForwardFriction.CalculateCoefficient(_differentialSlipRatio);
-            //TODO: substract rolling resistance
-            if (IsGrounded)
-                Rigid.AddForceAtPosition(transform.forward * tyreForce, _position);
-
-            var rollingResistanceForce = longitudinalTyreSpeed * _rollingResistance * _normalForce;
-            var angularAcceleration = (MotorTorque - (rollingResistanceForce + tyreForce) * WheelRadius) / Inertia;
-            _angularSpeed += angularAcceleration * Time.fixedDeltaTime;
-            _angularPosition = (_angularPosition + _angularSpeed * Time.fixedDeltaTime) % (2*Mathf.PI);
-        }
-
-        void UpdateSuspension()
+        private void UpdateSuspension()
         {
             var distance = Vector3.Distance(transform.position-Rigid.transform.up*_suspensionTravel, _position);
             var springForce = _spring * distance;
@@ -123,6 +100,30 @@ namespace Assets.Plugins.PrimeTyre
             if (IsGrounded)
                 Rigid.AddForceAtPosition(_normalForce * Rigid.transform.up, _position);
             _previousSuspensionDistance = distance;
+        }
+
+        private float CalculateSlipDelta()
+        {
+            var longitudinalCarSpeed = Vector3.Dot(Rigid.velocity, Rigid.transform.forward);
+            var longitudinalTyreSpeed = _angularSpeed * WheelRadius;
+            var slipdelta = (longitudinalTyreSpeed - longitudinalCarSpeed) -
+                            Mathf.Abs(longitudinalCarSpeed) * _differentialSlipRatio;
+            return slipdelta / RelaxationLenght;
+        }
+
+        public void GetWorldPose(out Vector3 position, out Quaternion rotation)
+        {
+            var tyreRotation = Quaternion.Euler((_rotation * 180.0f) / Mathf.PI, 0, 0);
+            position = GetTyrePosition();
+            rotation = Rigid.rotation * tyreRotation;
+        }
+
+        public bool GetGroundHit(out TyreHit hit)
+        {
+            hit = new TyreHit();
+            if (IsGrounded)
+                hit.ForwardSlip = _differentialSlipRatio;
+            return IsGrounded;
         }
     }
 }

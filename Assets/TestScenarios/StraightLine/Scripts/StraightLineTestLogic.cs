@@ -7,6 +7,9 @@ namespace Assets.TestScenarios.StraightLine.Scripts
         {
             tractionControl = false;
 
+            if (Time.time < 1.0f)
+                return 0.0f;
+
             if (Time.time < 4.0f)
                 return 200.0f;
 

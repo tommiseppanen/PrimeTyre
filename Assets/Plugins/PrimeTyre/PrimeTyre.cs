@@ -70,8 +70,20 @@ namespace Assets.Plugins.PrimeTyre
         public void GetWorldPose(out Vector3 position, out Quaternion rotation)
         {
             var tyreRotation = Quaternion.Euler((_angularPosition * 180.0f) / Mathf.PI, 0, 0);
-            position = _position;
+            position = GetTyrePosition();
             rotation = Rigid.rotation * tyreRotation;
+        }
+
+        private Vector3 GetTyrePosition()
+        {
+            RaycastHit hit;
+            IsGrounded = Physics.Raycast(new Ray(transform.position, -Rigid.transform.up), out hit,
+                WheelRadius + _suspensionTravel);
+            if (IsGrounded)
+            {
+                return hit.point + Rigid.transform.up * WheelRadius;
+            }
+            return transform.position - Rigid.transform.up * _suspensionTravel;
         }
 
         void Start()
@@ -81,18 +93,7 @@ namespace Assets.Plugins.PrimeTyre
 
         void FixedUpdate()
         {
-            RaycastHit hit;
-            IsGrounded = Physics.Raycast(new Ray(transform.position, -Rigid.transform.up), out hit,
-                WheelRadius + _suspensionTravel);
-            if (IsGrounded)
-            {
-                _position = hit.point+Rigid.transform.up * WheelRadius;
-            }
-            else
-            {
-                _position = transform.position - Rigid.transform.up*_suspensionTravel;
-            }
-
+            _position = GetTyrePosition();
             UpdateSuspension();
 
             var longitudinalCarSpeed = Vector3.Dot(Rigid.velocity, Rigid.transform.forward);

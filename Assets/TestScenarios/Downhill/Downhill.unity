@@ -290,22 +290,22 @@ Prefab:
     - target: {fileID: 114561423045304706, guid: cf2b4c59b92ebef4383717b3cca8878c,
         type: 2}
       propertyPath: _rollingResistance
-      value: 1
+      value: 0.001
       objectReference: {fileID: 0}
     - target: {fileID: 114831533062371068, guid: cf2b4c59b92ebef4383717b3cca8878c,
         type: 2}
       propertyPath: _rollingResistance
-      value: 1
+      value: 0.001
       objectReference: {fileID: 0}
     - target: {fileID: 114326465304130554, guid: cf2b4c59b92ebef4383717b3cca8878c,
         type: 2}
       propertyPath: _rollingResistance
-      value: 1
+      value: 0.001
       objectReference: {fileID: 0}
     - target: {fileID: 114799756716512356, guid: cf2b4c59b92ebef4383717b3cca8878c,
         type: 2}
       propertyPath: _rollingResistance
-      value: 1
+      value: 0.001
       objectReference: {fileID: 0}
     - target: {fileID: 54873578903325480, guid: cf2b4c59b92ebef4383717b3cca8878c,
         type: 2}

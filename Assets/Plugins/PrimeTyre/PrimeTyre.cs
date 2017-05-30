@@ -9,6 +9,8 @@ namespace Assets.Plugins.PrimeTyre
         private float WheelRadius = 0.3f;
         [SerializeField]
         private float Inertia = 1.3f;
+
+        //TODO: create automatic look up for parent rigidbody
         [SerializeField]
         private Rigidbody Rigid;
 
@@ -37,10 +39,10 @@ namespace Assets.Plugins.PrimeTyre
         [SerializeField]
         private FrictionCurve SidewaysFriction = new FrictionCurve
         {
-            ExtremumSlip = 0.4f,
+            ExtremumSlip = 0.2f,
             ExtremumValue = 1.0f,
-            AsymptoteSlip = 0.8f,
-            AsymptoteValue = 0.5f,
+            AsymptoteSlip = 0.5f,
+            AsymptoteValue = 0.75f,
             Stiffness = 1.0f
         };
 
@@ -62,23 +64,29 @@ namespace Assets.Plugins.PrimeTyre
         void Start()
         {
             _previousSuspensionDistance = _suspensionTravel;
+            _position = GetTyrePosition();
         }
 
         private void FixedUpdate()
         {
-            _position = GetTyrePosition();
-            UpdateSuspension();
-            _differentialSlipRatio += CalculateSlipDelta() * Time.fixedDeltaTime;
+            var newPosition = GetTyrePosition();
+            var velocity = (newPosition - _position) / Time.fixedDeltaTime;
+            _position = newPosition;
+            _normalForce = GetVerticalForce(_position);
 
-            var tyreForce = Mathf.Sign(_differentialSlipRatio) * _normalForce * ForwardFriction.CalculateCoefficient(_differentialSlipRatio);
-            //TODO: substract rolling resistance
+            var longitudinalSpeed = Vector3.Dot(velocity, transform.forward);
+            var lateralSpeed = Vector3.Dot(velocity, -transform.right);
+
+            var longitudinalForce = GetLongitudinalForce(_normalForce, longitudinalSpeed);
+            var lateralForce = GetLateralForce(_normalForce, longitudinalSpeed, lateralSpeed);
+            var totalForce = _normalForce * Rigid.transform.up + 
+                Rigid.transform.forward * longitudinalForce +
+                Rigid.transform.right * lateralForce;
+            
             if (IsGrounded)
-                Rigid.AddForceAtPosition(transform.forward * tyreForce, _position);
+                Rigid.AddForceAtPosition(totalForce, _position);
 
-            var rollingResistanceForce = _angularSpeed * WheelRadius * _rollingResistance * _normalForce;
-            var angularAcceleration = (MotorTorque - (rollingResistanceForce + tyreForce) * WheelRadius) / Inertia;
-            _angularSpeed += angularAcceleration * Time.fixedDeltaTime;
-            _rotation = (_rotation + _angularSpeed * Time.fixedDeltaTime) % (2*Mathf.PI);
+            UpdateAngularSpeed(longitudinalForce);
         }
 
         private Vector3 GetTyrePosition()
@@ -91,24 +99,49 @@ namespace Assets.Plugins.PrimeTyre
             return transform.position - Rigid.transform.up * _suspensionTravel;
         }
 
-        private void UpdateSuspension()
+        private float GetVerticalForce(Vector3 tyrePosition)
         {
-            var distance = Vector3.Distance(transform.position-Rigid.transform.up*_suspensionTravel, _position);
+            var distance = Vector3.Distance(transform.position - Rigid.transform.up * _suspensionTravel, tyrePosition);
             var springForce = _spring * distance;
             var damperForce = _damper * ((distance - _previousSuspensionDistance) / Time.fixedDeltaTime);
-            _normalForce = springForce + damperForce;
-            if (IsGrounded)
-                Rigid.AddForceAtPosition(_normalForce * Rigid.transform.up, _position);
             _previousSuspensionDistance = distance;
+            return springForce + damperForce;
         }
 
-        private float CalculateSlipDelta()
+        private float GetLongitudinalForce(float normalForce, float longitudinalSpeed)
         {
-            var longitudinalCarSpeed = Vector3.Dot(Rigid.velocity, Rigid.transform.forward);
-            var longitudinalTyreSpeed = _angularSpeed * WheelRadius;
-            var slipdelta = (longitudinalTyreSpeed - longitudinalCarSpeed) -
-                            Mathf.Abs(longitudinalCarSpeed) * _differentialSlipRatio;
+            //TODO: substract rolling resistance
+            _differentialSlipRatio += CalculateSlipDelta(_differentialSlipRatio, longitudinalSpeed) * Time.fixedDeltaTime;
+            return Mathf.Sign(_differentialSlipRatio) * normalForce * ForwardFriction.CalculateCoefficient(_differentialSlipRatio);
+        }
+
+        private float CalculateSlipDelta(float differentialSlipRatio, float longitudinalSpeed)
+        {
+            var longitudinalAngularSpeed = _angularSpeed * WheelRadius;
+            var slipdelta = (longitudinalAngularSpeed - longitudinalSpeed) -
+                            Mathf.Abs(longitudinalSpeed) * differentialSlipRatio;
             return slipdelta / RelaxationLenght;
+        }
+
+        private float GetLateralForce(float normalForce, float longitudinalSpeed, float lateralSpeed)
+        {
+            var slipAngle = CalculateSlipAngle(longitudinalSpeed, lateralSpeed);
+            var coefficient = SidewaysFriction.CalculateCoefficient(slipAngle);
+            return Mathf.Sign(slipAngle) * coefficient * normalForce;
+        }
+
+        private float CalculateSlipAngle(float longitudinalSpeed, float lateralSpeed)
+        {
+            return Mathf.Atan2(lateralSpeed, Mathf.Abs(longitudinalSpeed));
+        }
+
+        private void UpdateAngularSpeed(float longitudinalForce)
+        {
+            //TODO: apply rolling resistance and longitudinalForce only if grounded
+            var rollingResistanceForce = _angularSpeed * WheelRadius * _rollingResistance * _normalForce;
+            var angularAcceleration = (MotorTorque - (rollingResistanceForce + longitudinalForce) * WheelRadius) / Inertia;
+            _angularSpeed += angularAcceleration * Time.fixedDeltaTime;
+            _rotation = (_rotation + _angularSpeed * Time.fixedDeltaTime) % (2 * Mathf.PI);
         }
 
         public void GetWorldPose(out Vector3 position, out Quaternion rotation)

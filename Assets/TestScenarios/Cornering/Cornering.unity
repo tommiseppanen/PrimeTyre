@@ -201,8 +201,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de0dfbad865ef2d439cd10c508d814e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  FrontRightWheel: {fileID: 1199422342}
+  FrontLeftWheel: {fileID: 1534011852}
   RearRightWheel: {fileID: 531171011}
   RearLeftWheel: {fileID: 1069765091}
+--- !u!114 &1199422342 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114831533062371068, guid: cf2b4c59b92ebef4383717b3cca8878c,
+    type: 2}
+  m_PrefabInternal: {fileID: 1286860090}
+  m_Script: {fileID: 11500000, guid: 57266aa2fa5fc8d4caa61df824f92a71, type: 3}
 --- !u!1001 &1286860090
 Prefab:
   m_ObjectHideFlags: 0
@@ -274,6 +282,12 @@ Prefab:
     - {fileID: 114271358681764228, guid: cf2b4c59b92ebef4383717b3cca8878c, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: cf2b4c59b92ebef4383717b3cca8878c, type: 2}
   m_IsPrefabParent: 0
+--- !u!114 &1534011852 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114799756716512356, guid: cf2b4c59b92ebef4383717b3cca8878c,
+    type: 2}
+  m_PrefabInternal: {fileID: 1286860090}
+  m_Script: {fileID: 11500000, guid: 57266aa2fa5fc8d4caa61df824f92a71, type: 3}
 --- !u!1 &1861826642
 GameObject:
   m_ObjectHideFlags: 0
@@ -305,7 +319,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 10794e917380b42438f6aa56c1f20585, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

@@ -48,6 +48,7 @@ namespace Assets.Plugins.PrimeTyre
 
         public float MotorTorque { get; set; }
         public float BrakeTorque { get; set; }
+        public float SteeringAngle { get; set; }
 
         public bool IsGrounded { get; private set; }
 
@@ -69,6 +70,7 @@ namespace Assets.Plugins.PrimeTyre
 
         private void FixedUpdate()
         {
+            SetStreeringRotation();
             var newPosition = GetTyrePosition();
             var velocity = (newPosition - _position) / Time.fixedDeltaTime;
             _position = newPosition;
@@ -87,6 +89,12 @@ namespace Assets.Plugins.PrimeTyre
                 Rigid.AddForceAtPosition(totalForce, _position);
 
             UpdateAngularSpeed(longitudinalForce);
+        }
+
+        private void SetStreeringRotation()
+        {
+            var steeringRotation = Quaternion.AngleAxis(SteeringAngle, Rigid.transform.up);
+            transform.rotation = Rigid.rotation * steeringRotation;
         }
 
         private Vector3 GetTyrePosition()
@@ -149,7 +157,7 @@ namespace Assets.Plugins.PrimeTyre
         {
             var tyreRotation = Quaternion.Euler((_rotation * 180.0f) / Mathf.PI, 0, 0);
             position = GetTyrePosition();
-            rotation = Rigid.rotation * tyreRotation;
+            rotation = transform.rotation * tyreRotation;
         }
 
         public bool GetGroundHit(out TyreHit hit)

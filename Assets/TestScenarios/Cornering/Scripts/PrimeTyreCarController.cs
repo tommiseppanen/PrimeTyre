@@ -1,11 +1,15 @@
 ﻿using Assets.Plugins.PrimeTyre;
-using Assets.TestScenarios.StraightLine.Scripts;
 using UnityEngine;
 
 namespace Assets.TestScenarios.Cornering.Scripts
 {
     public class PrimeTyreCarController : MonoBehaviour
     {
+        [SerializeField]
+        private PrimeTyre FrontRightWheel;
+
+        [SerializeField]
+        private PrimeTyre FrontLeftWheel;
 
         [SerializeField]
         private PrimeTyre RearRightWheel;
@@ -13,27 +17,45 @@ namespace Assets.TestScenarios.Cornering.Scripts
         [SerializeField]
         private PrimeTyre RearLeftWheel;
 
-        private float _maxEngineTorque = 1200.0f;
-        private float _maxBrakeTorque = 2000.0f;
+        private float _maxEngineTorque = 1600.0f;
+        private float _maxBrakeTorque = 2500.0f;
 
-        void FixedUpdate()
+        private float _maxSteeringAngle = 30.0f;
+
+        private void FixedUpdate()
         {
-            var joystick = Input.GetAxis("Vertical");
-            if (joystick < 0.0f)
+            SetSteerAngles();
+            SetTorques();
+        }
+
+        private void SetSteerAngles()
+        {
+            var joystickValue = Input.GetAxis("Horizontal");
+            FrontRightWheel.SteeringAngle = _maxSteeringAngle * joystickValue;
+            FrontLeftWheel.SteeringAngle = _maxSteeringAngle * joystickValue;
+        }
+
+        private void SetTorques()
+        {
+            var joystickValue = Input.GetAxis("Vertical");
+            if (joystickValue < 0.0f)
             {
                 RearRightWheel.MotorTorque = 0;
                 RearLeftWheel.MotorTorque = 0;
-                RearLeftWheel.BrakeTorque = -joystick * _maxBrakeTorque;
-                RearRightWheel.BrakeTorque = -joystick * _maxBrakeTorque;
+                RearLeftWheel.BrakeTorque = -joystickValue * _maxBrakeTorque;
+                RearRightWheel.BrakeTorque = -joystickValue * _maxBrakeTorque;
+                FrontRightWheel.BrakeTorque = -joystickValue * _maxBrakeTorque;
+                FrontLeftWheel.BrakeTorque = -joystickValue * _maxBrakeTorque;
             }
             else
             {
                 RearLeftWheel.BrakeTorque = 0.0f;
                 RearRightWheel.BrakeTorque = 0.0f;
-                RearRightWheel.MotorTorque = joystick * _maxEngineTorque;
-                RearLeftWheel.MotorTorque = joystick * _maxEngineTorque;
+                FrontRightWheel.BrakeTorque = 0.0f;
+                FrontLeftWheel.BrakeTorque = 0.0f;
+                RearRightWheel.MotorTorque = joystickValue * _maxEngineTorque;
+                RearLeftWheel.MotorTorque = joystickValue * _maxEngineTorque;
             }
         }
     }
 }
-

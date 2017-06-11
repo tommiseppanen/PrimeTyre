@@ -139,7 +139,8 @@ namespace Assets.Plugins.PrimeTyre
         {
             //TODO: apply rolling resistance and longitudinalForce only if grounded
             var rollingResistanceForce = _angularSpeed * WheelRadius * _rollingResistance * _normalForce;
-            var angularAcceleration = (MotorTorque - (rollingResistanceForce + longitudinalForce) * WheelRadius) / Inertia;
+            var angularAcceleration = (MotorTorque - Mathf.Sign(_angularSpeed)* BrakeTorque - 
+                (rollingResistanceForce + longitudinalForce) * WheelRadius) / Inertia;
             _angularSpeed += angularAcceleration * Time.fixedDeltaTime;
             _rotation = (_rotation + _angularSpeed * Time.fixedDeltaTime) % (2 * Mathf.PI);
         }

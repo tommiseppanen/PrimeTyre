@@ -2,6 +2,6 @@
 Open source wheel collider for Unity
 
 TODO:
-- steering
+- low speed optimizations
 - refactor
 - unit tests & optimizations?

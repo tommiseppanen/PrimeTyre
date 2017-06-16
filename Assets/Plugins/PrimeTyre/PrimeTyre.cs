@@ -6,9 +6,9 @@ namespace Assets.Plugins.PrimeTyre
     {
 
         [SerializeField]
-        private float WheelRadius = 0.3f;
+        private float _wheelRadius = 0.353f;
         [SerializeField]
-        private float Inertia = 1.3f;
+        private float _inertia = 3f;
 
         //TODO: create automatic look up for parent rigidbody
         [SerializeField]
@@ -88,7 +88,7 @@ namespace Assets.Plugins.PrimeTyre
             if (IsGrounded)
                 Rigid.AddForceAtPosition(totalForce, _position);
 
-            UpdateAngularSpeed(longitudinalForce);
+            UpdateAngularSpeed(IsGrounded ? longitudinalForce : 0.0f);
         }
 
         private void SetStreeringRotation()
@@ -101,9 +101,9 @@ namespace Assets.Plugins.PrimeTyre
         {
             RaycastHit hit;
             IsGrounded = Physics.Raycast(new Ray(transform.position, -Rigid.transform.up), out hit,
-                WheelRadius + _suspensionTravel);
+                _wheelRadius + _suspensionTravel);
             if (IsGrounded)
-                return hit.point + Rigid.transform.up * WheelRadius;
+                return hit.point + Rigid.transform.up * _wheelRadius;
             return transform.position - Rigid.transform.up * _suspensionTravel;
         }
 
@@ -118,14 +118,16 @@ namespace Assets.Plugins.PrimeTyre
 
         private float GetLongitudinalForce(float normalForce, float longitudinalSpeed)
         {
-            //TODO: substract rolling resistance
             _differentialSlipRatio += CalculateSlipDelta(_differentialSlipRatio, longitudinalSpeed) * Time.fixedDeltaTime;
-            return Mathf.Sign(_differentialSlipRatio) * normalForce * ForwardFriction.CalculateCoefficient(_differentialSlipRatio);
+            var rollingResistanceForce = _angularSpeed * _wheelRadius * _rollingResistance * normalForce;
+            var frictionForce = Mathf.Sign(_differentialSlipRatio) * normalForce *
+                                ForwardFriction.CalculateCoefficient(_differentialSlipRatio);
+            return frictionForce - rollingResistanceForce;
         }
 
         private float CalculateSlipDelta(float differentialSlipRatio, float longitudinalSpeed)
         {
-            var longitudinalAngularSpeed = _angularSpeed * WheelRadius;
+            var longitudinalAngularSpeed = _angularSpeed * _wheelRadius;
             var slipdelta = (longitudinalAngularSpeed - longitudinalSpeed) -
                             Mathf.Abs(longitudinalSpeed) * differentialSlipRatio;
             return slipdelta / RelaxationLenght;
@@ -145,10 +147,8 @@ namespace Assets.Plugins.PrimeTyre
 
         private void UpdateAngularSpeed(float longitudinalForce)
         {
-            //TODO: apply rolling resistance and longitudinalForce only if grounded
-            var rollingResistanceForce = _angularSpeed * WheelRadius * _rollingResistance * _normalForce;
-            var angularAcceleration = (MotorTorque - Mathf.Sign(_angularSpeed)* BrakeTorque - 
-                (rollingResistanceForce + longitudinalForce) * WheelRadius) / Inertia;
+            var angularAcceleration = (MotorTorque - Mathf.Sign(_angularSpeed)* BrakeTorque -
+                 longitudinalForce * _wheelRadius) / _inertia;
             _angularSpeed += angularAcceleration * Time.fixedDeltaTime;
             _rotation = (_rotation + _angularSpeed * Time.fixedDeltaTime) % (2 * Mathf.PI);
         }

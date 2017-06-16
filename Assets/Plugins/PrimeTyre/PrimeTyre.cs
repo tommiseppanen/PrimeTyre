@@ -27,7 +27,7 @@ namespace Assets.Plugins.PrimeTyre
         private float _rollingResistance = 0.001f;
 
         [SerializeField]
-        private FrictionCurve ForwardFriction = new FrictionCurve
+        private FrictionCurve _forwardFriction = new FrictionCurve
         {
             ExtremumSlip = 0.4f,
             ExtremumValue = 1.0f,
@@ -37,7 +37,7 @@ namespace Assets.Plugins.PrimeTyre
         };
 
         [SerializeField]
-        private FrictionCurve SidewaysFriction = new FrictionCurve
+        private FrictionCurve _sidewaysFriction = new FrictionCurve
         {
             ExtremumSlip = 0.2f,
             ExtremumValue = 1.0f,
@@ -119,10 +119,8 @@ namespace Assets.Plugins.PrimeTyre
         private float GetLongitudinalForce(float normalForce, float longitudinalSpeed)
         {
             _differentialSlipRatio += CalculateSlipDelta(_differentialSlipRatio, longitudinalSpeed) * Time.fixedDeltaTime;
-            var rollingResistanceForce = _angularSpeed * _wheelRadius * _rollingResistance * normalForce;
-            var frictionForce = Mathf.Sign(_differentialSlipRatio) * normalForce *
-                                ForwardFriction.CalculateCoefficient(_differentialSlipRatio);
-            return frictionForce - rollingResistanceForce;
+            return Mathf.Sign(_differentialSlipRatio) * normalForce *
+                                _forwardFriction.CalculateCoefficient(_differentialSlipRatio);           
         }
 
         private float CalculateSlipDelta(float differentialSlipRatio, float longitudinalSpeed)
@@ -136,19 +134,20 @@ namespace Assets.Plugins.PrimeTyre
         private float GetLateralForce(float normalForce, float longitudinalSpeed, float lateralSpeed)
         {
             var slipAngle = CalculateSlipAngle(longitudinalSpeed, lateralSpeed);
-            var coefficient = SidewaysFriction.CalculateCoefficient(slipAngle);
+            var coefficient = _sidewaysFriction.CalculateCoefficient(slipAngle);
             return Mathf.Sign(slipAngle) * coefficient * normalForce;
         }
 
-        private float CalculateSlipAngle(float longitudinalSpeed, float lateralSpeed)
+        private static float CalculateSlipAngle(float longitudinalSpeed, float lateralSpeed)
         {
             return Mathf.Atan2(lateralSpeed, Mathf.Abs(longitudinalSpeed));
         }
 
         private void UpdateAngularSpeed(float longitudinalForce)
         {
+            var rollingResistanceForce = _angularSpeed * _wheelRadius * _rollingResistance * _normalForce;
             var angularAcceleration = (MotorTorque - Mathf.Sign(_angularSpeed)* BrakeTorque -
-                 longitudinalForce * _wheelRadius) / _inertia;
+                 (rollingResistanceForce + longitudinalForce) * _wheelRadius) / _inertia;
             _angularSpeed += angularAcceleration * Time.fixedDeltaTime;
             _rotation = (_rotation + _angularSpeed * Time.fixedDeltaTime) % (2 * Mathf.PI);
         }

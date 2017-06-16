@@ -56,6 +56,8 @@ namespace Assets.Plugins.PrimeTyre
         private float _rotation;
 
         private float _differentialSlipRatio;
+        private float _slipAngle;
+        private Vector3 _totalForce;
         private Vector3 _position;
         private float _previousSuspensionDistance;
         private float _normalForce;
@@ -81,12 +83,12 @@ namespace Assets.Plugins.PrimeTyre
 
             var longitudinalForce = GetLongitudinalForce(_normalForce, longitudinalSpeed);
             var lateralForce = GetLateralForce(_normalForce, longitudinalSpeed, lateralSpeed);
-            var totalForce = _normalForce * Rigid.transform.up + 
+            _totalForce = _normalForce * Rigid.transform.up + 
                 Rigid.transform.forward * longitudinalForce +
                 Rigid.transform.right * lateralForce;
             
             if (IsGrounded)
-                Rigid.AddForceAtPosition(totalForce, _position);
+                Rigid.AddForceAtPosition(_totalForce, _position);
 
             UpdateAngularSpeed(longitudinalForce);
         }
@@ -133,9 +135,9 @@ namespace Assets.Plugins.PrimeTyre
 
         private float GetLateralForce(float normalForce, float longitudinalSpeed, float lateralSpeed)
         {
-            var slipAngle = CalculateSlipAngle(longitudinalSpeed, lateralSpeed);
-            var coefficient = _sidewaysFriction.CalculateCoefficient(slipAngle);
-            return Mathf.Sign(slipAngle) * coefficient * normalForce;
+            _slipAngle = CalculateSlipAngle(longitudinalSpeed, lateralSpeed);
+            var coefficient = _sidewaysFriction.CalculateCoefficient(_slipAngle);
+            return Mathf.Sign(_slipAngle) * coefficient * normalForce;
         }
 
         private static float CalculateSlipAngle(float longitudinalSpeed, float lateralSpeed)
@@ -163,7 +165,11 @@ namespace Assets.Plugins.PrimeTyre
         {
             hit = new TyreHit();
             if (IsGrounded)
+            {
                 hit.ForwardSlip = _differentialSlipRatio;
+                hit.SidewaysSlip = _slipAngle;
+                hit.Force = _totalForce;
+            }
             return IsGrounded;
         }
     }

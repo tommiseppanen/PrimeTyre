@@ -56,6 +56,13 @@ namespace Assets.TestScenarios.Cornering.Scripts
                 RearRightWheel.MotorTorque = joystickValue * _maxEngineTorque;
                 RearLeftWheel.MotorTorque = joystickValue * _maxEngineTorque;
             }
+
+            //Handbrake
+            if (Input.GetButton("Jump"))
+            {
+                RearLeftWheel.BrakeTorque = _maxBrakeTorque;
+                RearRightWheel.BrakeTorque = _maxBrakeTorque;
+            }
         }
     }
 }

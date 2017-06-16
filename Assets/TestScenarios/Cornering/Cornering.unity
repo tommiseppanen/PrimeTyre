@@ -271,10 +271,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _tyres:
-  - {fileID: 531171011}
-  - {fileID: 1069765091}
-  - {fileID: 1199422342}
   - {fileID: 1534011852}
+  - {fileID: 1199422342}
+  - {fileID: 1069765091}
+  - {fileID: 531171011}
 --- !u!114 &1069765091 stripped
 MonoBehaviour:
   m_PrefabParentObject: {fileID: 114561423045304706, guid: cf2b4c59b92ebef4383717b3cca8878c,
@@ -547,22 +547,22 @@ Prefab:
         type: 2}
       propertyPath: _tyres.Array.data[0]
       value: 
-      objectReference: {fileID: 531171011}
+      objectReference: {fileID: 1534011852}
     - target: {fileID: 114524633482916682, guid: 69f35d9e94d311b4ebc470897016bd29,
         type: 2}
       propertyPath: _tyres.Array.data[1]
       value: 
-      objectReference: {fileID: 1069765091}
+      objectReference: {fileID: 1199422342}
     - target: {fileID: 114524633482916682, guid: 69f35d9e94d311b4ebc470897016bd29,
         type: 2}
       propertyPath: _tyres.Array.data[2]
       value: 
-      objectReference: {fileID: 1199422342}
+      objectReference: {fileID: 1069765091}
     - target: {fileID: 114524633482916682, guid: 69f35d9e94d311b4ebc470897016bd29,
         type: 2}
       propertyPath: _tyres.Array.data[3]
       value: 
-      objectReference: {fileID: 1534011852}
+      objectReference: {fileID: 531171011}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 69f35d9e94d311b4ebc470897016bd29, type: 2}
   m_IsPrefabParent: 0

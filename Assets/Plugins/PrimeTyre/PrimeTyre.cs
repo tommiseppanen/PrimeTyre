@@ -167,7 +167,7 @@ namespace Assets.Plugins.PrimeTyre
             if (IsGrounded)
             {
                 hit.ForwardSlip = _differentialSlipRatio;
-                hit.SidewaysSlip = _slipAngle;
+                hit.SidewaysSlip = _slipAngle * 180.0f / Mathf.PI;
                 hit.Force = _totalForce;
             }
             return IsGrounded;

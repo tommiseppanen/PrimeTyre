@@ -88,7 +88,7 @@ namespace Assets.Plugins.PrimeTyre
             if (IsGrounded)
                 Rigid.AddForceAtPosition(totalForce, _position);
 
-            UpdateAngularSpeed(IsGrounded ? longitudinalForce : 0.0f);
+            UpdateAngularSpeed(longitudinalForce);
         }
 
         private void SetStreeringRotation()

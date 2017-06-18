@@ -120,9 +120,18 @@ namespace Assets.Plugins.PrimeTyre
 
         private float GetLongitudinalForce(float normalForce, float longitudinalSpeed)
         {
-            _differentialSlipRatio += CalculateSlipDelta(_differentialSlipRatio, longitudinalSpeed) * Time.fixedDeltaTime;
-            return Mathf.Sign(_differentialSlipRatio) * normalForce *
-                                _forwardFriction.CalculateCoefficient(_differentialSlipRatio);           
+            var delta = CalculateSlipDelta(_differentialSlipRatio, longitudinalSpeed);
+            _differentialSlipRatio +=  delta * Time.fixedDeltaTime;
+            return Mathf.Sign(DampenSlipRatioForLowSpeeds(_differentialSlipRatio, delta, longitudinalSpeed)) 
+                * normalForce * _forwardFriction.CalculateCoefficient(_differentialSlipRatio);           
+        }
+
+        private float DampenSlipRatioForLowSpeeds(float differentialSlipRatio, float delta, float longitudinalSpeed)
+        {
+            var tau = 0.02f;    // oscillation period (experimental)
+            if (longitudinalSpeed > 1.0f)
+                tau = 0.0f;
+            return differentialSlipRatio + tau * delta;
         }
 
         private float CalculateSlipDelta(float differentialSlipRatio, float longitudinalSpeed)

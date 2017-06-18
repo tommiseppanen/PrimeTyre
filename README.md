@@ -5,3 +5,5 @@ TODO:
 - write readme
 - braking optimizations
 - gizmos
+- parametrize relaxation lengths
+- limit combined friction?

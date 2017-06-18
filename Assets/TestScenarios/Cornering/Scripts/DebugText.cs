@@ -24,8 +24,9 @@ namespace Assets.TestScenarios.Cornering.Scripts
             {
                 TyreHit hit;
                 t.GetGroundHit(out hit);
-                return string.Format("{0,-10:F2}\t{1,-10:F2}\t{2,-10:F0}",
-                    hit.ForwardSlip, hit.SidewaysSlip, hit.Force.y);
+                return string.Format("{0,-10:F2} {1,-10:F2} {2,-10:F0} {3,-10:F0}",
+                    hit.ForwardSlip, hit.SidewaysSlip, hit.Force.y, 
+                    Mathf.Abs(hit.Force.x)+Mathf.Abs(hit.Force.z));
             });
             _text.text = info.Aggregate(string.Empty, (combined, next) => combined + "\n" + next);
         }

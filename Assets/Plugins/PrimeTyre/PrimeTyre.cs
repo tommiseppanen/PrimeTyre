@@ -98,7 +98,7 @@ namespace Assets.Plugins.PrimeTyre
         private void SetStreeringRotation()
         {
             var steeringRotation = Quaternion.AngleAxis(SteeringAngle, Rigid.transform.up);
-            transform.rotation = Rigid.rotation * steeringRotation;
+            transform.rotation = steeringRotation * Rigid.rotation;
         }
 
         private Vector3 GetTyrePosition()

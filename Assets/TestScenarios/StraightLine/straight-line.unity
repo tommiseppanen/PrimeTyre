@@ -199,23 +199,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57266aa2fa5fc8d4caa61df824f92a71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WheelRadius: 0.353
-  Inertia: 3
+  _wheelRadius: 0.353
+  _inertia: 3
   Rigid: {fileID: 1912178056}
   _suspensionTravel: 0.3
   _spring: 20000
   _damper: 2000
   _rollingResistance: 0.001
-  ForwardFriction:
+  _forwardFriction:
     _extremumSlip: 0.4
     _extremumValue: 1
     _asymptoteSlip: 0.8
     _asymptoteValue: 0.5
     _stiffness: 2
-  SidewaysFriction:
-    _extremumSlip: 0.2
+  _sidewaysFriction:
+    _extremumSlip: 15
     _extremumValue: 1
-    _asymptoteSlip: 0.5
+    _asymptoteSlip: 30
     _asymptoteValue: 0.75
     _stiffness: 2
 --- !u!1 &128959894
@@ -277,23 +277,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57266aa2fa5fc8d4caa61df824f92a71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WheelRadius: 0.353
-  Inertia: 3
+  _wheelRadius: 0.353
+  _inertia: 3
   Rigid: {fileID: 1065148247}
   _suspensionTravel: 0.3
   _spring: 20000
   _damper: 2000
   _rollingResistance: 0.001
-  ForwardFriction:
+  _forwardFriction:
     _extremumSlip: 0.4
     _extremumValue: 1
     _asymptoteSlip: 0.8
     _asymptoteValue: 0.5
     _stiffness: 2
-  SidewaysFriction:
-    _extremumSlip: 0.2
+  _sidewaysFriction:
+    _extremumSlip: 15
     _extremumValue: 1
-    _asymptoteSlip: 0.5
+    _asymptoteSlip: 30
     _asymptoteValue: 0.75
     _stiffness: 2
 --- !u!4 &155826649
@@ -780,23 +780,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57266aa2fa5fc8d4caa61df824f92a71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WheelRadius: 0.353
-  Inertia: 3
+  _wheelRadius: 0.353
+  _inertia: 3
   Rigid: {fileID: 1912178056}
   _suspensionTravel: 0.3
   _spring: 20000
   _damper: 2000
   _rollingResistance: 0.001
-  ForwardFriction:
+  _forwardFriction:
     _extremumSlip: 0.4
     _extremumValue: 1
     _asymptoteSlip: 0.8
     _asymptoteValue: 0.5
     _stiffness: 2
-  SidewaysFriction:
-    _extremumSlip: 0.2
+  _sidewaysFriction:
+    _extremumSlip: 15
     _extremumValue: 1
-    _asymptoteSlip: 0.5
+    _asymptoteSlip: 30
     _asymptoteValue: 0.75
     _stiffness: 2
 --- !u!1 &845742427
@@ -1152,6 +1152,16 @@ Prefab:
         type: 2}
       propertyPath: SidewaysFriction._asymptoteValue
       value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 114748400674812038, guid: d3f0fd3335173ba4cbda97f63fb205ce,
+        type: 2}
+      propertyPath: _forwardFriction._stiffness
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114748400674812038, guid: d3f0fd3335173ba4cbda97f63fb205ce,
+        type: 2}
+      propertyPath: _sidewaysFriction._stiffness
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d3f0fd3335173ba4cbda97f63fb205ce, type: 2}
@@ -1573,6 +1583,16 @@ Prefab:
       propertyPath: SidewaysFriction._asymptoteValue
       value: 0.75
       objectReference: {fileID: 0}
+    - target: {fileID: 114748400674812038, guid: d3f0fd3335173ba4cbda97f63fb205ce,
+        type: 2}
+      propertyPath: _forwardFriction._stiffness
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114748400674812038, guid: d3f0fd3335173ba4cbda97f63fb205ce,
+        type: 2}
+      propertyPath: _sidewaysFriction._stiffness
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d3f0fd3335173ba4cbda97f63fb205ce, type: 2}
   m_IsPrefabParent: 0
@@ -1733,23 +1753,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57266aa2fa5fc8d4caa61df824f92a71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WheelRadius: 0.353
-  Inertia: 3
+  _wheelRadius: 0.353
+  _inertia: 3
   Rigid: {fileID: 1065148247}
   _suspensionTravel: 0.3
   _spring: 20000
   _damper: 2000
   _rollingResistance: 0.001
-  ForwardFriction:
+  _forwardFriction:
     _extremumSlip: 0.4
     _extremumValue: 1
     _asymptoteSlip: 0.8
     _asymptoteValue: 0.5
     _stiffness: 2
-  SidewaysFriction:
-    _extremumSlip: 0.2
+  _sidewaysFriction:
+    _extremumSlip: 15
     _extremumValue: 1
-    _asymptoteSlip: 0.5
+    _asymptoteSlip: 30
     _asymptoteValue: 0.75
     _stiffness: 2
 --- !u!4 &1655391114
@@ -1853,6 +1873,16 @@ Prefab:
         type: 2}
       propertyPath: SidewaysFriction._asymptoteValue
       value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 114748400674812038, guid: d3f0fd3335173ba4cbda97f63fb205ce,
+        type: 2}
+      propertyPath: _forwardFriction._stiffness
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114748400674812038, guid: d3f0fd3335173ba4cbda97f63fb205ce,
+        type: 2}
+      propertyPath: _sidewaysFriction._stiffness
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d3f0fd3335173ba4cbda97f63fb205ce, type: 2}
@@ -2028,6 +2058,16 @@ Prefab:
         type: 2}
       propertyPath: SidewaysFriction._asymptoteValue
       value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 114748400674812038, guid: d3f0fd3335173ba4cbda97f63fb205ce,
+        type: 2}
+      propertyPath: _forwardFriction._stiffness
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114748400674812038, guid: d3f0fd3335173ba4cbda97f63fb205ce,
+        type: 2}
+      propertyPath: _sidewaysFriction._stiffness
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d3f0fd3335173ba4cbda97f63fb205ce, type: 2}

@@ -374,6 +374,46 @@ Prefab:
       propertyPath: m_LocalPosition.z
       value: -7.8
       objectReference: {fileID: 0}
+    - target: {fileID: 114831533062371068, guid: cf2b4c59b92ebef4383717b3cca8878c,
+        type: 2}
+      propertyPath: _sidewaysFriction._extremumSlip
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 114799756716512356, guid: cf2b4c59b92ebef4383717b3cca8878c,
+        type: 2}
+      propertyPath: _sidewaysFriction._extremumSlip
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 114561423045304706, guid: cf2b4c59b92ebef4383717b3cca8878c,
+        type: 2}
+      propertyPath: _sidewaysFriction._extremumSlip
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 114326465304130554, guid: cf2b4c59b92ebef4383717b3cca8878c,
+        type: 2}
+      propertyPath: _sidewaysFriction._extremumSlip
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 114831533062371068, guid: cf2b4c59b92ebef4383717b3cca8878c,
+        type: 2}
+      propertyPath: _sidewaysFriction._asymptoteSlip
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 114799756716512356, guid: cf2b4c59b92ebef4383717b3cca8878c,
+        type: 2}
+      propertyPath: _sidewaysFriction._asymptoteSlip
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 114561423045304706, guid: cf2b4c59b92ebef4383717b3cca8878c,
+        type: 2}
+      propertyPath: _sidewaysFriction._asymptoteSlip
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 114326465304130554, guid: cf2b4c59b92ebef4383717b3cca8878c,
+        type: 2}
+      propertyPath: _sidewaysFriction._asymptoteSlip
+      value: 30
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 114271358681764228, guid: cf2b4c59b92ebef4383717b3cca8878c, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: cf2b4c59b92ebef4383717b3cca8878c, type: 2}

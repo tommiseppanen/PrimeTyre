@@ -39,9 +39,9 @@ namespace Assets.Plugins.PrimeTyre
         [SerializeField]
         private FrictionCurve _sidewaysFriction = new FrictionCurve
         {
-            ExtremumSlip = 0.2f,
+            ExtremumSlip = 15.0f,
             ExtremumValue = 1.0f,
-            AsymptoteSlip = 0.5f,
+            AsymptoteSlip = 30.0f,
             AsymptoteValue = 0.75f,
             Stiffness = 1.0f
         };
@@ -55,14 +55,16 @@ namespace Assets.Plugins.PrimeTyre
         private float _angularSpeed;
         private float _rotation;
 
-        private float _differentialSlipRatio;
-        private float _slipAngle;
+        private float _differentialSlipRatio; //percentage
+        private float _differentialTanOfSlipAngle;
+        private float _slipAngle; //degrees
         private Vector3 _totalForce;
         private Vector3 _position;
         private float _previousSuspensionDistance;
         private float _normalForce;
 
-        private const float RelaxationLenght = 0.0914f;
+        private const float RelaxationLengthLongitudinal = 0.103f;
+        private const float RelaxationLengthLateral = 0.303f;
 
         void Start()
         {
@@ -122,16 +124,16 @@ namespace Assets.Plugins.PrimeTyre
         {
             var delta = CalculateSlipDelta(_differentialSlipRatio, longitudinalSpeed);
             _differentialSlipRatio +=  delta * Time.fixedDeltaTime;
-            return Mathf.Sign(DampenSlipRatioForLowSpeeds(_differentialSlipRatio, delta, longitudinalSpeed)) 
+            return Mathf.Sign(DampenForLowSpeeds(_differentialSlipRatio, delta, longitudinalSpeed, 0.02f)) 
                 * normalForce * _forwardFriction.CalculateCoefficient(_differentialSlipRatio);           
         }
 
-        private float DampenSlipRatioForLowSpeeds(float differentialSlipRatio, float delta, float longitudinalSpeed)
+        //tau = oscillation period (experimental)
+        private float DampenForLowSpeeds(float value, float delta, float speed, float tau)
         {
-            var tau = 0.02f;    // oscillation period (experimental)
-            if (longitudinalSpeed > 1.0f)
+            if (speed > 0.15f)
                 tau = 0.0f;
-            return differentialSlipRatio + tau * delta;
+            return value + tau * delta;
         }
 
         private float CalculateSlipDelta(float differentialSlipRatio, float longitudinalSpeed)
@@ -139,7 +141,7 @@ namespace Assets.Plugins.PrimeTyre
             var longitudinalAngularSpeed = _angularSpeed * _wheelRadius;
             var slipdelta = (longitudinalAngularSpeed - longitudinalSpeed) -
                             Mathf.Abs(longitudinalSpeed) * differentialSlipRatio;
-            return slipdelta / RelaxationLenght;
+            return slipdelta / RelaxationLengthLongitudinal;
         }
 
         private float GetLateralForce(float normalForce, float longitudinalSpeed, float lateralSpeed)
@@ -149,9 +151,12 @@ namespace Assets.Plugins.PrimeTyre
             return Mathf.Sign(_slipAngle) * coefficient * normalForce;
         }
 
-        private static float CalculateSlipAngle(float longitudinalSpeed, float lateralSpeed)
+        private float CalculateSlipAngle(float longitudinalSpeed, float lateralSpeed)
         {
-            return Mathf.Atan2(lateralSpeed, Mathf.Abs(longitudinalSpeed));
+            float delta = lateralSpeed - Mathf.Abs(longitudinalSpeed) * _differentialTanOfSlipAngle;
+            delta /= RelaxationLengthLateral;
+            _differentialTanOfSlipAngle += delta * Time.fixedDeltaTime;
+            return Mathf.Atan(DampenForLowSpeeds(_differentialTanOfSlipAngle, delta, lateralSpeed, 0.001f)) * Mathf.Rad2Deg;
         }
 
         private void UpdateAngularSpeed(float longitudinalForce)
@@ -165,7 +170,7 @@ namespace Assets.Plugins.PrimeTyre
 
         public void GetWorldPose(out Vector3 position, out Quaternion rotation)
         {
-            var tyreRotation = Quaternion.Euler((_rotation * 180.0f) / Mathf.PI, 0, 0);
+            var tyreRotation = Quaternion.Euler(_rotation * Mathf.Rad2Deg, 0, 0);
             position = GetTyrePosition();
             rotation = transform.rotation * tyreRotation;
         }
@@ -176,7 +181,7 @@ namespace Assets.Plugins.PrimeTyre
             if (IsGrounded)
             {
                 hit.ForwardSlip = _differentialSlipRatio;
-                hit.SidewaysSlip = _slipAngle * 180.0f / Mathf.PI;
+                hit.SidewaysSlip = _slipAngle;
                 hit.Force = _totalForce;
             }
             return IsGrounded;

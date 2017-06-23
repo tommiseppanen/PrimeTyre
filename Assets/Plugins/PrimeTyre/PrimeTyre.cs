@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UnityEditor;
+using UnityEngine;
 
 namespace Assets.Plugins.PrimeTyre
 {
@@ -186,5 +187,22 @@ namespace Assets.Plugins.PrimeTyre
             }
             return IsGrounded;
         }
+
+        public void OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.yellow;
+            Handles.color = Color.green;
+            Vector3 position;
+            Quaternion rotation;
+            GetWorldPose(out position, out rotation);
+
+            //Draw tyre
+            Handles.DrawWireDisc(position, transform.right, _wheelRadius);
+
+            //Draw suspension
+            Gizmos.DrawLine(transform.position,
+                transform.position - Rigid.transform.up * _suspensionTravel);
+        }
+
     }
 }

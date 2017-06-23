@@ -63,6 +63,13 @@ namespace Assets.TestScenarios.Cornering.Scripts
                 RearLeftWheel.BrakeTorque = _maxBrakeTorque;
                 RearRightWheel.BrakeTorque = _maxBrakeTorque;
             }
+
+            //Front handbrake just for testing
+            if (Input.GetButton("Fire1"))
+            {
+                FrontLeftWheel.BrakeTorque = _maxBrakeTorque;
+                FrontRightWheel.BrakeTorque = _maxBrakeTorque;
+            }
         }
     }
 }

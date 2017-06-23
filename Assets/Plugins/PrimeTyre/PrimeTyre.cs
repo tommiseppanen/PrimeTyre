@@ -207,6 +207,9 @@ namespace Assets.Plugins.PrimeTyre
             //Draw suspension
             Gizmos.DrawLine(transform.position,
                 transform.position - Rigid.transform.up * _suspensionTravel);
+
+            var force = (_totalForce - _normalForce*transform.up) / 1000.0f;
+            Gizmos.DrawLine(transform.position, transform.position + force);
             #endif
         }
 

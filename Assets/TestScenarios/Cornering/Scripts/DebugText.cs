@@ -11,6 +11,9 @@ namespace Assets.TestScenarios.Cornering.Scripts
         [SerializeField]
         private List<PrimeTyre> _tyres;
 
+        [SerializeField]
+        private Rigidbody _rigidbody;
+
         private Text _text;
 
         void Start ()
@@ -29,6 +32,7 @@ namespace Assets.TestScenarios.Cornering.Scripts
                     Mathf.Abs(hit.Force.x)+Mathf.Abs(hit.Force.z));
             });
             _text.text = info.Aggregate(string.Empty, (combined, next) => combined + "\n" + next);
+            _text.text += string.Format("\n{0:F2}", _rigidbody.velocity.magnitude);
         }
     }
 }

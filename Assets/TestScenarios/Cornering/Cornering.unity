@@ -275,6 +275,7 @@ MonoBehaviour:
   - {fileID: 1199422342}
   - {fileID: 1069765091}
   - {fileID: 531171011}
+  _rigidbody: {fileID: 1138388605}
 --- !u!114 &1069765091 stripped
 MonoBehaviour:
   m_PrefabParentObject: {fileID: 114561423045304706, guid: cf2b4c59b92ebef4383717b3cca8878c,
@@ -301,6 +302,11 @@ MonoBehaviour:
   FrontLeftWheel: {fileID: 1534011852}
   RearRightWheel: {fileID: 531171011}
   RearLeftWheel: {fileID: 1069765091}
+--- !u!54 &1138388605 stripped
+Rigidbody:
+  m_PrefabParentObject: {fileID: 54873578903325480, guid: cf2b4c59b92ebef4383717b3cca8878c,
+    type: 2}
+  m_PrefabInternal: {fileID: 1286860090}
 --- !u!114 &1199422342 stripped
 MonoBehaviour:
   m_PrefabParentObject: {fileID: 114831533062371068, guid: cf2b4c59b92ebef4383717b3cca8878c,
@@ -603,6 +609,11 @@ Prefab:
       propertyPath: _tyres.Array.data[3]
       value: 
       objectReference: {fileID: 531171011}
+    - target: {fileID: 114524633482916682, guid: 69f35d9e94d311b4ebc470897016bd29,
+        type: 2}
+      propertyPath: _rigidbody
+      value: 
+      objectReference: {fileID: 1138388605}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 69f35d9e94d311b4ebc470897016bd29, type: 2}
   m_IsPrefabParent: 0

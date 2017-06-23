@@ -1,5 +1,9 @@
-﻿using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 
 namespace Assets.Plugins.PrimeTyre
 {
@@ -190,6 +194,7 @@ namespace Assets.Plugins.PrimeTyre
 
         public void OnDrawGizmosSelected()
         {
+            #if UNITY_EDITOR
             Gizmos.color = Color.yellow;
             Handles.color = Color.green;
             Vector3 position;
@@ -202,6 +207,7 @@ namespace Assets.Plugins.PrimeTyre
             //Draw suspension
             Gizmos.DrawLine(transform.position,
                 transform.position - Rigid.transform.up * _suspensionTravel);
+            #endif
         }
 
     }

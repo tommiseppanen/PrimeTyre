@@ -2,8 +2,7 @@
 Open source wheel collider for Unity
 
 TODO:
+- limit combined friction
 - write readme
 - braking optimizations
-- gizmos
 - parametrize relaxation lengths
-- limit combined friction?

@@ -52,7 +52,20 @@ namespace Assets.Plugins.PrimeTyre
         };
 
         public float MotorTorque { get; set; }
-        public float BrakeTorque { get; set; }
+
+        private float _brakeTorque;
+        public float BrakeTorque
+        {
+            get
+            {
+                return _brakeTorque;
+            }
+            set
+            {
+                _brakeTorque = Mathf.Abs(value);
+            }
+        }
+
         public float SteeringAngle { get; set; }
 
         public bool IsGrounded { get; private set; }
@@ -169,10 +182,27 @@ namespace Assets.Plugins.PrimeTyre
         private void UpdateAngularSpeed(float longitudinalForce)
         {
             var rollingResistanceForce = _angularSpeed * _wheelRadius * _rollingResistance * _normalForce;
-            var angularAcceleration = (MotorTorque - Mathf.Sign(_angularSpeed)* BrakeTorque -
-                 (rollingResistanceForce + longitudinalForce) * _wheelRadius) / _inertia;
+            var torqueFromTyreForces = (rollingResistanceForce + longitudinalForce) * _wheelRadius;
+            var angularAcceleration = (MotorTorque - Mathf.Sign(_angularSpeed) * _brakeTorque -
+                 torqueFromTyreForces) / _inertia;
+            if (WillBrakesLock(angularAcceleration, torqueFromTyreForces))
+            {
+                _angularSpeed = 0.0f;
+                return;
+            }
             _angularSpeed += angularAcceleration * Time.fixedDeltaTime;
             _rotation = (_rotation + _angularSpeed * Time.fixedDeltaTime) % (2 * Mathf.PI);
+        }
+
+        private bool WillBrakesLock(float angularAcceleration, float torqueFromTyreForces)
+        {
+            if (_brakeTorque < Mathf.Abs(MotorTorque - torqueFromTyreForces))
+                return false;
+
+            if (_brakeTorque > 0.0f && Mathf.Sign(_angularSpeed) != 
+                Mathf.Sign(_angularSpeed + angularAcceleration * Time.fixedDeltaTime))
+                return true;
+            return false;
         }
 
         public void GetWorldPose(out Vector3 position, out Quaternion rotation)

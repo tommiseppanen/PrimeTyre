@@ -153,6 +153,8 @@ namespace Assets.Plugins.PrimeTyre
         {
             _slipAngle = CalculateSlipAngle(longitudinalSpeed, lateralSpeed);
             var coefficient = _sidewaysFriction.CalculateCoefficient(_slipAngle);
+            //Limit lateral friction so that we won't go over traction circle budget
+            coefficient *= Mathf.Sqrt(1 - Mathf.Pow(_forwardFriction.CalculateCoefficient(_differentialSlipRatio) / _forwardFriction.ExtremumValue, 2));
             return Mathf.Sign(_slipAngle) * coefficient * normalForce;
         }
 
@@ -161,7 +163,7 @@ namespace Assets.Plugins.PrimeTyre
             float delta = lateralSpeed - Mathf.Abs(longitudinalSpeed) * _differentialTanOfSlipAngle;
             delta /= RelaxationLengthLateral;
             _differentialTanOfSlipAngle += delta * Time.fixedDeltaTime;
-            return Mathf.Atan(DampenForLowSpeeds(_differentialTanOfSlipAngle, delta, lateralSpeed, 0.001f)) * Mathf.Rad2Deg;
+            return Mathf.Atan(DampenForLowSpeeds(_differentialTanOfSlipAngle, delta, lateralSpeed, 0.1f)) * Mathf.Rad2Deg;
         }
 
         private void UpdateAngularSpeed(float longitudinalForce)

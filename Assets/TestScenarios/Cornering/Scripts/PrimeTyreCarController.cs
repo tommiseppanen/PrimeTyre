@@ -26,6 +26,7 @@ namespace Assets.TestScenarios.Cornering.Scripts
         {
             SetSteerAngles();
             SetTorques();
+            HandleDebugInput();
         }
 
         private void SetSteerAngles()
@@ -69,6 +70,20 @@ namespace Assets.TestScenarios.Cornering.Scripts
             {
                 FrontLeftWheel.BrakeTorque = _maxBrakeTorque;
                 FrontRightWheel.BrakeTorque = _maxBrakeTorque;
+            }
+        }
+
+        void HandleDebugInput()
+        {
+            if (Input.GetKey(KeyCode.N))
+            {
+                var rigid = GetComponent<Rigidbody>();
+                rigid.AddForce(transform.forward*10000);
+            }
+            if (Input.GetKey(KeyCode.M))
+            {
+                var rigid = GetComponent<Rigidbody>();
+                rigid.AddForce(transform.right * 10000);
             }
         }
     }

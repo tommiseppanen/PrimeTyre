@@ -2,7 +2,7 @@
 Open source wheel collider for Unity
 
 TODO:
-- limit combined friction
+- investigate better ways to limit combined friction
+- debug tyre behaviour when external forces are applied to the car
 - write readme
-- braking optimizations
 - parametrize relaxation lengths

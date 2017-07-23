@@ -15,6 +15,7 @@ namespace Assets.TestScenarios.Cornering.Scripts
         private Rigidbody _rigidbody;
 
         private Text _text;
+        private float _previousVelocity = 0.0f;
 
         void Start ()
         {
@@ -32,7 +33,9 @@ namespace Assets.TestScenarios.Cornering.Scripts
                     Mathf.Abs(hit.Force.x)+Mathf.Abs(hit.Force.z));
             });
             _text.text = info.Aggregate(string.Empty, (combined, next) => combined + "\n" + next);
-            _text.text += string.Format("\n{0:F2}", _rigidbody.velocity.magnitude);
+            var velocity = _rigidbody.velocity.magnitude;
+            _text.text += string.Format("\n{0:F2} {1:F2}", velocity, (velocity - _previousVelocity) / Time.deltaTime);
+            _previousVelocity = velocity;
         }
     }
 }

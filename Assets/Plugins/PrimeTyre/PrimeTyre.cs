@@ -15,6 +15,9 @@ namespace Assets.Plugins.PrimeTyre
         [SerializeField]
         private float _inertia = 3f;
 
+        [SerializeField]
+        private float _mass = 20f;
+
         //TODO: create automatic look up for parent rigidbody
         [SerializeField]
         private Rigidbody Rigid;
@@ -96,7 +99,7 @@ namespace Assets.Plugins.PrimeTyre
             var newPosition = GetTyrePosition();
             var velocity = (newPosition - _position) / Time.fixedDeltaTime;
             _position = newPosition;
-            _normalForce = GetVerticalForce(_position);
+            _normalForce = GetSuspensionForce(_position)+ _mass * Mathf.Abs(Physics.gravity.y);
 
             var longitudinalSpeed = Vector3.Dot(velocity, transform.forward);
             var lateralSpeed = Vector3.Dot(velocity, -transform.right);
@@ -129,7 +132,7 @@ namespace Assets.Plugins.PrimeTyre
             return transform.position - Rigid.transform.up * _suspensionTravel;
         }
 
-        private float GetVerticalForce(Vector3 tyrePosition)
+        private float GetSuspensionForce(Vector3 tyrePosition)
         {
             var distance = Vector3.Distance(transform.position - Rigid.transform.up * _suspensionTravel, tyrePosition);
             var springForce = _spring * distance;
